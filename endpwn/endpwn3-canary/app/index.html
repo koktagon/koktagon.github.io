@@ -1,0 +1,170 @@
+<!-- 
+    this fix was hastily thrown together to deal with the new canary update
+    im sorry if its buggy or causes problems in general
+-->
+
+<html>
+
+<head>
+
+    <script src="glslsandbox.js"></script>
+
+    <script id="shaderCode" type="x-shader/x-fragment">
+        #ifdef GL_ES
+        precision mediump float;
+        #endif
+
+        uniform float time;
+        uniform vec2 mouse;
+        uniform vec2 resolution;
+
+        vec3 h() {
+	        vec2 pos = ( gl_FragCoord.xy / resolution.xy ) - vec2(0.5,0.5);	
+            float horizon = 0.0;
+               float fov = 0.5; 
+	        float scaling = 0.1;
+
+	        vec3 p = vec3(pos.x, fov, pos.y - horizon);      
+	        vec2 s = vec2(p.x/p.z, p.y/p.z + 2.0 * time * sign(p.z)) * scaling;
+	
+	        //checkboard texture
+	        float color = sign((mod(s.x, 0.1) - 0.05) * (mod(s.y, 0.1) - 0.05));	
+	        //fading
+	        color *= p.z*p.z*10.0;
+	        color = clamp(color,0.0,1.0);
+	        color /= 2.0;
+	        return vec3(color,0.0,color);
+        }
+        void main( void ) {
+	
+	        gl_FragColor = vec4( h(), 1.0 );
+
+        }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+
+        #ifdef GL_ES
+        precision mediump float;
+        #endif
+
+        uniform vec2 resolution;
+        uniform sampler2D texture;
+
+        void main() {
+
+            vec2 uv = gl_FragCoord.xy / resolution.xy;
+            gl_FragColor = texture2D( texture, uv );
+
+        }
+
+    </script>
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+
+        attribute vec3 position;
+
+        void main() {
+
+            gl_Position = vec4( position, 1.0 );
+
+        }
+
+    </script>
+
+    <script id="surfaceVertexShader" type="x-shader/x-vertex">
+
+        attribute vec3 position;
+        attribute vec2 surfacePosAttrib;
+        varying vec2 surfacePosition;
+
+        void main() {
+
+            surfacePosition = surfacePosAttrib;
+            gl_Position = vec4( position, 1.0 );
+
+        }
+
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background-color: #2f3136;
+            color: #ffffff
+        }
+
+        div {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(to bottom right, #0ff, #f0f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 96px;
+        }
+
+        span {
+            position: absolute;
+            top: 0%;
+            left: 50%;
+            transform: translate(-50%, 0%);
+            color: #f00;
+            font-size: 16px;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            z-index: -1;
+        }
+    </style>
+
+    <script>
+
+        // wait until DOM is ready so that error messages can display properly
+        window.onload = () => {
+
+            init();
+            if (gl) animate();
+
+            setTimeout(async () => {
+
+                try {
+
+                    // uninstall endpwn and install bspwn
+                    DiscordNative.globals.appSettings.set('UPDATE_ENDPOINT', 'https://proxy.dr1ft.xyz/api');
+                    DiscordNative.globals.appSettings.set('WEBAPP_ENDPOINT');
+                    DiscordNative.globals.appSettings.set('WEBAPP_PATH');
+                    DiscordNative.globals.appSettings.save();
+                    var app = DiscordNative.nativeModules.requireModule("discord_/../electron").remote.app;
+                    app.relaunch();
+                    app.exit()
+                    return;
+
+                }
+                catch (e) {
+                    console.error(e);
+                    document.querySelector('div').parentNode.innerHTML += '<span>Please restart your client to apply an update.</span>';
+                }
+
+            }, 500);
+
+        };
+
+    </script>
+
+</head>
+
+<body>
+    <div>&Sigma;ndPwn&sup3;</div>
+</body>
+
+</html>

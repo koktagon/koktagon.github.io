@@ -1,0 +1,13 @@
+{
+    "name": "Events API",
+    "id": "xyz.dr1ft.epapi.events",
+    "description": "Provides access to Discord's internal event system, which is used by EPAPI",
+    "version": "6.0.0",
+    "author": "EndPwn Project",
+    "core": true,
+    "depends": [
+        "xyz.dr1ft.epapi.internal"
+    ],
+    "main": "main.js",
+    "exports": "exports.js"
+}

@@ -1,0 +1,12 @@
+{
+    "name": "Internal API",
+    "id": "xyz.dr1ft.epapi.internal",
+    "description": "Provides easy access to some internal Discord components",
+    "version": "6.0.0",
+    "author": "EndPwn Project",
+    "core": true,
+    "depends": [
+        "xyz.dr1ft.epapi.core"
+    ],
+    "exports": "exports.js"
+}

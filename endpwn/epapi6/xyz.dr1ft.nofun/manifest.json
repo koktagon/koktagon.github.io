@@ -1,0 +1,8 @@
+{
+    "name": "No Loading Lines",
+    "id": "xyz.dr1ft.nofun",
+    "description": "Replaces loading lines with a generic 'Loading...'",
+    "version": "1.1.0",
+    "author": "dr1ft",
+    "replacements": "replace.js"
+}

@@ -1,0 +1,17 @@
+{
+    "name": "EndPwn Settings",
+    "id": "xyz.dr1ft.endpwn.settings",
+    "description": "Adds the EndPwn settings menu",
+    "version": "3.2.0",
+    "author": "EndPwn Project",
+    "core": true,
+    "depends": [
+        "xyz.dr1ft.epapi.core",
+        "xyz.dr1ft.epapi.events",
+        "xyz.dr1ft.epapi.internal",
+        "xyz.dr1ft.epapi.ui"
+    ],
+    "replacements": "replacements.js",
+    "main": "main.js",
+    "style": "style.css"
+}
