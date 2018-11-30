@@ -1,9 +1,0 @@
-{
-    "name": "EPAPI5 Compatibility Layer",
-    "id": "xyz.dr1ft.epapi.compatibility",
-    "description": "Provides a runtime for legacy plugins",
-    "version": "5.7.48",
-    "author": "EndPwn Project",
-    "core": true,
-    "preload": "preload.js"
-}

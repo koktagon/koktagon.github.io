@@ -1,9 +1,0 @@
-{
-    "name": "Plugin Loader",
-    "id": "xyz.dr1ft.epapi.init",
-    "description": "The core of EPAPI",
-    "version": "6.0.0",
-    "author": "EndPwn Project",
-    "core": true,
-    "preload": "preload.js"
-}

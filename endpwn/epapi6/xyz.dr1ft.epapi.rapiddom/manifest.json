@@ -1,9 +1,0 @@
-{
-    "name": "RapidDOM",
-    "id": "xyz.dr1ft.epapi.rapiddom",
-    "description": "Mess with DOM easier",
-    "version": "1.0.0",
-    "author": "EndPwn Project",
-    "core": true,
-    "preload": "preload.js"
-}
