@@ -1,0 +1,135 @@
+<html>
+<head>
+<title>The 32-bit iOS downgrade guide</title>
+<meta property="og:title" content="the 32-bit iOS downgrade guide" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://octagonxd.xyz" />
+<meta property="og:description" content="Downgrade from iOS 9 to 8.4.1 or 6.1.3" />
+</head>
+<body bgcolor=#000000>
+<font color=white>
+<h1>The 32-bit iOS downgrade guide</h1>
+The following is an assortment of methods to OTA downgrade your iOS device, I won't be covering downgrading with SHSH blobs as that is pretty self-explanatory with tools like
+<a href="https://github.com/CoocooFroggy/FutureRestore-GUI">FutureRestore GUI.</a><br>
+<h2>The plist method</h2>
+There are tweaks that will modify these values for you, but it's not rocket science to do it yourself using Filza.<br>
+As such, that's what I'll be covering here.<br><br>
+Requirements:
+<ul>
+<li>One of the supported devices on iOS 10 or 9</li>
+<li>jailbreak</li>
+<li>Cydia and file manager (iFile, Filza) installed</li>
+</ul>
+Supported devices:
+<ul>
+<li>iPad 2 WiFi (iPad2,1)</li>
+<li>iPad 2 GSM (iPad2,2)</li>
+<li>iPad 2 CDMA (iPad2,3)</li>
+<li>iPad 2 Mid-2012 (iPad2,4)</li>
+<li>iPad mini 1st generation WiFi (iPad2,5)</li>
+<li>iPad mini 1st generation GSM (iPad2,6)</li>
+<li>iPad mini 1st generation Global (iPad2,7)</li>
+<li>iPad 3 WiFi (iPad3,1)</li>
+<li>iPad 3 CDMA (iPad3,2)</li>
+<li>iPad 3 GSM (iPad3,3)</li>
+<li>iPad 4 WiFi (iPad3,4)</li>
+<li>iPad 4 GSM (iPad3,5)</li>
+<li>iPad 4 Global (iPad3,6)</li>
+<li>iPhone 4S (iPhone4,1)</li>
+<li>iPhone 5 GSM (iPhone5,1)</li>
+<li>iPhone 5 Global (iPhone5,2)</li>
+<li>iPod Touch 5th generation (iPod5,1)</li>
+</ul>
+This method will allow you to downgrade your device to iOS 8.4.1.<br>
+<h3>Step 1: Modifying the plist</h3>
+The particular plist you are looking for is /System/Library/CoreServices/SystemVersion.plist, navigate to it in Filza and open it.<br>
+<img src="before.png" /><br>
+Within this file, you want to modify ProductVersion and ProductBuildVersion values to reflect iOS 6.0 or 6.1.3, it doesn't matter.<br>
+<img src="after.png" /><br>
+You can find these values by looking up your device on ipsw.me and looking at the available versions.<br>
+The number goes into ProductVersion and the hexadecimal number in brackets goes into ProductBuildVersion.<br>
+<h3>Step 2: Installing iOS 8.4.1</h3>
+Save your modified plist and reboot the device.<br>
+After the reboot, navigate into Settings, General, Software Update. After a short while, you should get the option to install iOS 8.4.1.<br>
+<img src="update.png" /><br>
+Hit Download and install, wait for it to finish. After the device is done "updating", make sure to navigate to Settings, General, Reset and hit Erase all content and settings.<br>
+<img src="example.png" /><br>
+<h2>OdysseusOTA2</h2>
+OdysseusOTA2 is a set of tools that will allow you to OTA downgrade much like OdysseusOTA except it'll install iOS 8.4.1 instead of 6.1.3.<br><br>
+Requirements:
+<ul>
+<li>Supported device running iOS 10 or 9</li>
+<li>jailbreak</li>
+<li>OpenSSH installed</li>
+<li>Mac or Linux computer</li>
+</ul>
+Supported devices:
+<ul>
+<li>iPad 2 WiFi (iPad2,1)</li>
+<li>iPad 2 GSM (iPad2,2)</li>
+<li>iPad 2 CDMA (iPad2,3)</li>
+<li>iPad 2 Mid-2012 (iPad2,4)</li>
+<li>iPad mini 1st generation WiFi (iPad2,5)</li>
+<li>iPad mini 1st generation GSM (iPad2,6)</li>
+<li>iPad mini 1st generation Global (iPad2,7)</li>
+<li>iPad 3 WiFi (iPad3,1)</li>
+<li>iPad 3 CDMA (iPad3,2)</li>
+<li>iPad 3 GSM (iPad3,3)</li>
+<li>iPad 4 WiFi (iPad3,4)</li>
+<li>iPad 4 GSM (iPad3,5)</li>
+<li>iPad 4 Global (iPad3,6)</li>
+<li>iPhone 4S (iPhone4,1)</li>
+<li>iPhone 5 GSM (iPhone5,1)</li>
+<li>iPhone 5 Global (iPhone5,2)</li>
+<li>iPod Touch 5th generation (iPod5,1)</li>
+</ul>
+<h3>Step 1: acquiring OdysseusOTA2, the firmware bundles and an IPSW</h3>
+Download <a href="https://www.youtube.com/watch?v=fh0tB6fp0Sc">OdysseusOTA2</a> (check the video description), <a href="https://ipsw.me">the IPSW</a> and <a href="https://files.fm/u/azznnggz">the appropriate firmware bundle for your device</a>.<br>
+<h3>Step 2: Building your downgrade IPSW</h3>
+Building your downgrade IPSW is gonna be much of the same process as with OdysseusOTA, nevertheless:<br>
+1: move the iOS 8.4.1 IPSW to either the macos or linux directory in your OdysseusOTA2 folder, depending on your OS.<br>
+1.5: move the folder within the firmware bundle zip for your device into the FirmwareBundles directory corresponding to your OS, unless you have an iPhone 4S or iPhone 5 - these have their firmware bundle included.<br>
+2: open a terminal in the directory and run the command: <i>./ipsw [iOS IPSW] downgrade.ipsw</i><br>
+2.5: if you have a GSM or CDMA device, make sure to append -bbupdate at the end of the command, if you don't you won't be able to activate the device.<br>
+3: connect your device to your Mac or PC, make sure you have usbmuxd installed on Linux and make sure it's running, then run the following command: <i>./idevicerestore -t downgrade.ipsw</i> - This command will request an SHSH blob for the restore later.<br>
+4: get the pwned iBSS from the IPSW using this command: <i> ./xpwn `unzip -j downgrade.ipsw 'Firmware/dfu/iBSS*' | awk '/inflating/{print $2}'` pwnediBSS</i><br>
+5: copy the pwned iBSS and kloader to your device over SSH: <i>scp pwnediBSS ../kloader root@[IP of device]:</i> - don't forget the : at the end. Default root password is alpine.<br>
+<h3>Step 3: initiating the downgrade</h3>
+1: SSH into the device: <i>ssh root@[IP of device]</i>, password: alpine<br>
+2: put your device into kDFU mode: <i>./kloader pwnediBSS</i><br>
+3: open a new terminal in the OdysseusOTA2/macos or linux directory, run the command: <i>./idevicerestore -w downgrade.ipsw</i><br><br>
+This will take a while, but once it's done, you'll be on iOS 8.4.1.<br><br>
+Now I have covered both methods of downgrading to 8.4.1, I will cover iOS 6.1.3 next, and there is really only one method these days, Apple <b>used to</b> sign iOS 6.1.3 IPSWs, however they haven't done that since iOS 9.3.6 released.<br>
+That method is:<br>
+<h3>OdysseusOTA</h3>
+Requirements:
+<ul>
+<li>Supported device on iOS 9 or 8</li>
+<li>jailbreak</li>
+<li>OpenSSH installed</li>
+<li>Mac or Linux computer</li>
+</ul>
+Supported devices:
+<ul>
+<li>iPad 2 WiFi (iPad2,1)</li>
+<li>iPad 2 GSM (iPad2,2)</li>
+<li>iPad 2 CDMA (iPad2,3)</li>
+<li>iPhone 4S (iPhone4,1)</li>
+</ul>
+The iPad 2 Mid-2012 (iPad2,4) is <b>not supported</b>. If your iPad 2 is WiFi only and 16 GB, there is a chance it's an iPad2,4, otherwise you probably have a supported iPad.<br>
+<h3>Step 1: acquiring OdysseusOTA and an IPSW</h3>
+Download <a href="https://www.youtube.com/watch?v=Wo7mGdMcjxw">OdysseusOTA</a> (check the video description) and <a href="https://ipsw.me">the IPSW</a>.<br>
+<h3>Step 2: Building your downgrade IPSW</h3>
+Building your downgrade IPSW is gonna be much of the same process as with OdysseusOTA2, nevertheless:<br>
+1: move the iOS 6.1.3 IPSW to either the macos or linux directory in your OdysseusOTA folder, depending on your OS.<br>
+2: open a terminal in the directory and run the command: <i>./ipsw [iOS IPSW] downgrade.ipsw</i><br>
+2.5: if you have a GSM or CDMA device, make sure to append -bbupdate at the end of the command, if you don't you won't be able to activate the device.<br>
+3: connect your device to your Mac or PC, make sure you have usbmuxd installed on Linux and make sure it's running, then run the following command: <i>./idevicerestore -t downgrade.ipsw</i> - This command will request an SHSH blob for the restore later.<br>
+4: get the pwned iBSS from the IPSW using this command: <i> ./xpwn `unzip -j downgrade.ipsw 'Firmware/dfu/iBSS*' | awk '/inflating/{print $2}'` pwnediBSS</i><br>
+5: copy the pwned iBSS and kloader to your device over SSH: <i>scp pwnediBSS ../kloader root@[IP of device]:</i> - don't forget the : at the end. Default root password is alpine.<br>
+<h3>Step 3: initiating the downgrade</h3>
+1: SSH into the device: <i>ssh root@[IP of device]</i>, password: alpine<br>
+2: put your device into kDFU mode: <i>./kloader pwnediBSS</i><br>
+3: open a new terminal in the OdysseusOTA/macos or linux directory, run the command: <i>./idevicerestore -w downgrade.ipsw</i><br><br>
+This will take a while, but once it's done, you'll be on iOS 6.1.3.<br>
+The keen-eyed among you will notice I just copypasted the OdysseusOTA2 steps, however they are simply the same procedure, why wouldn't I?<br>
