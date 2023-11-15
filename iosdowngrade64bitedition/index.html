@@ -1,0 +1,87 @@
+<html>
+<head>
+<title>64-bit iOS downgrade and hacktivation adventure</title>
+</head>
+<body bgcolor=#000000>
+<font color=white>
+<h1>iOS 64-bit downgrade and hacktivation bonanza</h1>
+Well, the activation bonanza part only applies to A11 devices. iOS 16's SEP will let you downgrade down to iOS 14.3, however you can't activate it.<br>
+<b>This has always struck me as so close to running old versions of iOS yet so far... until now.</b><br>
+Procure the following tools:
+<ul>
+<li>A compatible iOS device</li>
+<li>Your target iOS IPSW & SHSH blobs</li>
+<li>A computer with macOS or Linux</li>
+<li><a href="https://github.com/verygenericname/SSHRD_Script">SSHRD_Script</a></li>
+<li><a href="https://koktagon.github.io/assets/activate.sh">this activation script</a></li>
+<li><a href="https://github.com/CoocooFroggy/FutureRestore-GUI">FutureRestore GUI</a> and <a href="https://nightly.link/futurerestore/futurerestore/workflows/ci/main">FutureRestore</a></li>
+<li><a href="https://cdn.discordapp.com/attachments/1020892312756293695/1102082543253205012/mobileactivationd">this executable</a> (you can technically use this to bypass activation but please don't use this to use stolen devices)</li>
+</ul>
+The following devices are compatible:<br>
+A7-A10 (no hacktivation required)
+<ul>
+<li>A7: iPhone 5s, iPad mini 2, iPad mini 3, iPad Air 1</li>
+<li>A8(X): iPhone 6, iPod Touch 6, iPad Air 2, ...</li>
+<li>A9(X): iPhone 6s, iPhone SE 2016, iPad 5, iPad Pro 1</li>
+<li>A10: iPhone 7, iPod Touch 7 (perhaps iPads too with iOS 16 activation records but these iPads get iOS 17)</li>
+<li>each iPhone's Plus counterpart</li>
+</ul>
+A11 (hacktivation stuff required)
+<ul>
+<li>iPhone 8</li> 
+<li>iPhone 8 Plus</li>
+</ul>
+iPhone X is not compatible.<br>
+<img src="linusphone.jpg" /><br>
+Example picture of a compatible iOS device<br><br>
+<h2>Part 0: A11 Prep</h2>
+Before we begin with the downgrade, if you have an A11 device we need to do a fresh restore of iOS to grab activation records.<br>
+Use iTunes for this, just do a regular DFU restore, I'll meet you at the setup screen.<br>
+Connect the iPhone to WiFi as usual. If you have an activation lock, enter your credentials to activate.<br>
+Once the activation screen goes away, DO NOT CONTINUE. Instead, connect the iPhone to your PC and boot it into DFU mode.<br>
+Open a terminal in the SSHRD_Script folder and type the following commands:<br>
+<i>./sshrd.sh [iOS version]<br>
+./sshrd.sh boot<br>
+./sshrd.sh ssh<br></i>
+Replace [iOS version] with the actual version you restored to. Mismatching this WILL cause a boot-loop until you restore.<br>
+Wait inbetween the commands for the stuff on the device to be done.<br>
+This should SSH into the iPhone. Now, run <i>mount_filesystems</i><br>
+Open your (S)FTP software of choice (I use FileZilla), connect to the device with the following parameters:
+<ul>
+<li>Address: sftp://localhost</li>
+<li>Username: root</li>
+<li>Password: alpine</li>
+<li>Port: 2222</li>
+</ul>
+Download the following files/folders to a folder called "Activation" on your desktop (I shit you not this is necessary for the script to work):
+<ul>
+<li>/mnt2/containers/Data/System/[random hex string]/Library/internal (enter each folder until you find it)</li>
+<li>/mnt2/containers/Data/System/[random hex string]/Library/activation_records (enter each folder until you find it)</li>
+<li>/mnt2/mobile/Library/FairPlay
+<li>/mnt2/wireless/Library/Preferences/com.apple.commcenter.device_specific_nobackup.plist</li>
+</ul>
+<h2>Part 1: The downgrade</h2>
+With all the PC software in hand, open the SSHRD_Script folder, navigate to Darwin or Linux depending on your OS (macOS is Darwin) and open a terminal.<br>
+Connect your device via USB to your computer and boot into DFU mode. (look this up for your device I'm not gonna hold your hand on this)<br>
+In the terminal, run <i>./gaster pwn</i><br>
+Open FutureRestore-GUI, select your FutureRestore binary, IPSW and SHSH blob, click Next.<br>
+Select the options "Pwned restore (--use-pwndfu)" and "Set ApNonce (--set-nonce)", click Next.<br>
+Now, simply click "Start FutureRestore". If all goes well, your device should be in recovery mode and you should have confirmation in the log that the ApNonce is set.<br>
+Go back to the options, deselect "Set ApNonce (--set-nonce)" and "Pwned restore (--use-pwndfu)", and click "Start FutureRestore" again. Now, the actual downgrading process begins.<br>
+If you have an A7-A10 device, congratulations. You have restored an older version of iOS and can use it right away. A11 users will have to do extra work with the activation records that were dumped.<br>
+<h2>Part 2: A11 hacktivation</h2>
+There are 2 ways you can approach this, either a method that involves a jailbreak and a script or a jb-less, scriptless version just with SSH Ramdisk.<br>
+I will explain the scriptless version here. The reason you may need the scriptful version to begin with is due to possibly missing perms.<br>
+If you already tried activating, you probably noticed that Apple won't let you activate (you need to do this anyway to find the appropriate folders later). But this is where the fun part begins. The hacktivation begins by going back into DFU mode.<br>
+In the SSHRD_Script folder, run in terminal: <i>./sshrd.sh [iOS version]</i>, <i>./sshrd.sh boot</i>, <i>./sshrd.sh ssh</i>, <i>mount_filesystems</i><br>
+You can probably imagine what you have to do in FileZilla at this point: put the files/folders back on the phone in the appropriate locations.<br>
+As a reminder that's: activation_record.plist going into the "activation_records" folder, data_ark.plist going into the "internal" folder, IC-Info.sisv going into the FairPlay/iTunes_Control/iTunes folder, the commcenter_devicespecific_nobackup.plist into the wireless/Library/Preferences folder.<br>
+The reason you had to fail activation at least once is so it creates some empty files you can replace with your own.<br>
+Once you find the internal and activaton_records folders, note their path, navigate to them in the SSH terminal and <b>rm -rf</b> any files that reside inside these folders.<br>
+You may also need to rm -rf the contents of the FairPlay folder and the commcenter plist.<br>
+Point is, you will run into permission issues if you don't delete these files.</br>
+If all goes well and all files are put in place, you now have a hacktivated iPhone. You can do anything you want on this old version (install TrollStore, jailbreak, etc).<br>
+Should this have not worked, you can use the method with palera1n jailbreak and temporary activation bypass from <a href="https://gist.github.com/Orangera1n/fa3ca03d6aa9f5be963fd3b72c3f4225">this gist</a>.<br>
+(just note that it's quite shoddily written and misses out details like having to reside in a writable directory for ldid to work. you should also use my version of the script for this.)
+</body>
+</html>
