@@ -1,0 +1,56 @@
+<html>
+<head>
+<title>Making a PS1 modchip with the Xgecu T48</title>
+</head>
+<body>
+<h1>Making your own PS1 modchip</h1>
+While you can get premade PS1 modchips for 10 bucks on ebay, I thought it would be cool to make your own, if you can afford the tools that is.<br>
+You will need:
+<ul>
+<li>A computer</li>
+<li>A PS1 you want to modify (duh)</li>
+<li>A programmer (a PICkit can be used but I will focus on using the Xgecu T48)</li>
+<li>A way to connect your PIC to the programmer (I got the SOIC version of the PIC so I used the SOIC8 adapter)</li>
+<li>A compatible PIC</li>
+</ul>
+The hex files for PS1 modchips were originally written for the PIC12C508A.<br>
+These will work without any modifications on the more readily available PIC12F508, so that would be the PIC to get.<br>
+People have also used the PIC12F629 and PIC12F683, however the modchip code will not work on these without modifications.<br>
+Thankfully, people on the internet have mostly already done this work for you and archive.org in particular has multiple archives containing all the hex files for PS1 modchips.<br>
+<h2>Programming the chip</h2>
+Connect your programmer to your PC, the PIC to the programmer and open the programming application.<br>
+Since I am using the T48, I will be using Xgpro.<br>
+Click on the big select IC button, search for "PIC" and select the PIC you are using.<br><br>
+<img src="Xgpro-chipselect.png" alt="" />
+<br><br>
+Afterwards, you are going to load the hex file for the modchip code you want to use. In my case, that will be Mayumi v4 EUR for PIC12C508A.<br>
+Recommended modchip programs per revision:
+<ul>
+<li>SCPH-1000/1001/1002: Stealth 2.8a</li>
+<li>SCPH-300x/350x/550x/555x/750x/900x/100/101: MultiMode3 (Use Mayumi v4 if MM3 doesn't work)</li>
+<li>SCPH-102: ONEchip (PAL PSone has extra BIOS protection just like the Japanese models)</li>
+<li>Any Japanese model: PsNee (Atmel based, ATMega required for BIOS patch)</li>
+</ul>
+The main difference between MultiMode3 and Mayumi v4 is that the former relies on the PIC's internal oscillator, while the latter makes use of the Mechacon's clock line for timing.<br><br>
+<img src="Xgpro-load.png" alt="" />
+<br><br>
+If you are using Xgpro, you will probably get a warning at this point saying "Out of address of the device!". This is normal. Click OK and it will load.<br><br>
+<img src="Xgpro-warning.png" alt="" />
+<br><br>
+After you have loaded the hex file, this is more or less what the window should look like:<br><br>
+<img src="Xgpro-flash.png" alt="" />
+<br><br>
+Very important: <b>Before you flash the PIC, you need to adjust the configuration!</b><br>
+Go over to the CONFIG tab and check MCLRE and WDTE to set them low:<br><br>
+<img src="Xgpro-config.png" alt="" />
+<br><br>
+Afterwards, click on the big PROG. button and the programming window will pop up.<br>
+Here, just click Program and your PIC should receive the code. If not, double check your connections and try again.<br><br>
+<img src="Xgpro-prog.png" alt="" />
+<br><br>
+Note: if you enabled /CP in the CONFIG tab, the verification step will fail, as you just enabled copy protection. This is normal.<br>
+<h2>Installing the modchip in your PS1</h2>
+I will not be providing diagrams for this step as there are plenty out there already. I personally recommend William Quade's installation diagrams.<br>
+You can quite easily figure out your board revision by taking your console apart, then it's just a matter of finding the correct diagram.<br>
+Personally, I used an SCPH-5502, which has the board revision PU-18.<br><br>
+<img src="IMG_0376.jpg" alt="" />
